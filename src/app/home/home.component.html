@@ -1,0 +1,135 @@
+<div class="container">
+
+  <div class="row">
+
+    <div class="col-lg-3">
+      <h1 class="my-4">students</h1>
+      <div class="list-group">
+        <!-- <a href="#" class="list-group-item active">Name lastname 1</a> -->
+        <a class="list-group-item" *ngFor="let student of students | async; let i = index" routerLink="/{{i}}"
+          routerLinkActive="router-link-active">{{student.name}} {{student.lastname}}</a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+          Add new Student
+        </button>
+      </div>
+    </div>
+    <!-- /.col-lg-3 -->
+
+    <div class="col-lg-9" *ngIf="student">
+
+      <div class="card mt-4">
+        <!-- <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt=""> -->
+        <ngx-charts-bar-vertical *ngIf="student.materials" class="card-img-top img-fluid" [view]="view" [scheme]="colorScheme"
+          [results]="student.materials" [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel">
+        </ngx-charts-bar-vertical>
+        <div class="card-body">
+          <h3 class="card-title"> {{student?.name}} {{student?.lastname}}</h3>
+        </div>
+      </div>
+      <!-- /.card -->
+
+      <div class="card card-outline-secondary my-4">
+        <div class="card-header">
+          Edit
+        </div>
+        <div class="card-body">
+
+          <!-- <div class="form-group">
+              <label for="exampleInputEmail1">Name</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Name">
+
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1">Lastname</label>
+              <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Lastname">
+
+            </div> -->
+          <div class="form-group">
+            <label for="exampleInputEmail1">Level</label>
+            <select class="form-control" [(ngModel)]="student.level" #selectlvl (change)="levelSelected(selectlvl.value)">
+              <option>0</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+            </select>
+          </div>
+
+          <hr>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Materials</label>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" #matname placeholder="Add new material" aria-describedby="basic-addon2">
+              <input type="number" min="0" #matval class="form-control" placeholder="level of material"
+                aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-success" (click)="addMaterial(matname.value, matval.value)" type="button">+</button>
+              </div>
+            </div>
+            <div *ngIf="student.materials">
+              <div class="input-group mb-3" *ngFor="let material of student.materials">
+                <input type="text" class="form-control" [value]="material.name" disabled aria-describedby="basic-addon2">
+                <input type="text" class="form-control" [value]="material.value" disabled aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-danger" (click)="deleteMaterial(material)" type="button">x</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- <small class="text-muted">Posted by Anonymous on 3/1/17</small> -->
+          <!-- <hr> -->
+          <button class="btn btn-success" (click)="save()">Save</button>
+        </div>
+      </div>
+      <!-- /.card -->
+
+    </div>
+    <!-- /.col-lg-9 -->
+
+  </div>
+
+</div>
+
+
+
+
+<!-- <ngx-charts-bar-vertical [view]="view" [scheme]="colorScheme" [results]="single" [gradient]="gradient" [xAxis]="showXAxis"
+    [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" (select)="onSelect($event)">
+  </ngx-charts-bar-vertical> -->
+
+
+<!-- <button (click)="btn()">add +</button> -->
+
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add student</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Name</label>
+          <input type="text" #name class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Enter Name">
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Lastname</label>
+          <input type="text" #lastname class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+            placeholder="Enter Lastname">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="addStudent(name.value, lastname.value)">Add
+          Student</button>
+      </div>
+    </div>
+  </div>
+</div>
