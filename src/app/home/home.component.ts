@@ -7,6 +7,7 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
 import { RouterStateSnapshot, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -56,8 +57,16 @@ export class HomeComponent implements OnInit {
   students;
   student: any = {};
   idStudent;
-  constructor(private db: AngularFireDatabase, private route: ActivatedRoute) {
+  studentToRemove;
+  constructor(private db: AngularFireDatabase, private route: ActivatedRoute, public afAuth: AngularFireAuth) {
     this.route.params.subscribe(params => { this.idStudent = params.i; console.log(params); this.ngOnInit(); });
+  }
+
+  login() {
+    this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
+  }
+  logout() {
+    this.afAuth.auth.signOut();
   }
 
   ngOnInit() {
@@ -123,4 +132,9 @@ export class HomeComponent implements OnInit {
     this.db.list('students').update(this.idStudent, this.student);
   }
 
+  removeStudent() {
+    if (this.studentToRemove) {
+      this.db.list('students').remove(this.studentToRemove.toString());
+    }
+  }
 }
